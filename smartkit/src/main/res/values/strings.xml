@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SmartKit</string>
+    <string name="cancel_download_weibo">取消下载</string>
+    <string name="not_support_api_hint">新浪微博版本过低</string>
+</resources>
