@@ -8,6 +8,7 @@ public class WeChatParams {
     String title;
     String description;
     Bitmap thumb;
+    String thumbUrl;
 
     public String getShareUrl() {
         return shareUrl;
@@ -47,5 +48,13 @@ public class WeChatParams {
 
     public void setThumb(Bitmap thumb) {
         this.thumb = thumb;
+    }
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 }

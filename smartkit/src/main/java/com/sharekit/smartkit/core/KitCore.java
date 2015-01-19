@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -36,8 +37,24 @@ public class KitCore {
         Bitmap tempBitmap = Picasso.with(context).load(url).get();
         while (tempBitmap.getRowBytes()* tempBitmap.getHeight() > KByte * 1024)
         {
-            tempBitmap = Picasso.with(context).load(url).resize(tempBitmap.getWidth()/2,tempBitmap.getHeight()/2).get();
+            tempBitmap = Picasso.with(context).load(url).resize(tempBitmap.getWidth() / 2, tempBitmap.getHeight() / 2).get();
         }
         return tempBitmap;
+    }
+    public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
+        if (needRecycle) {
+            bmp.recycle();
+        }
+
+        byte[] result = output.toByteArray();
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }
