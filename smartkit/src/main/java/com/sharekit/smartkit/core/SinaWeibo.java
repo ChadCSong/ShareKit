@@ -75,6 +75,7 @@ public class SinaWeibo {
         mWeiboShareAPI.registerApp();
     }
 
+
     public boolean shareSinaWeibo(final SinaWeiboParams sinaWeiboParams, final int type) {
         // 创建微博 SDK 接口实例
         // 获取微博客户端相关信息，如是否安装、支持 SDK 的版本

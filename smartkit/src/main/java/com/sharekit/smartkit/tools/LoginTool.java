@@ -1,4 +1,4 @@
-package com.sharekit.smartkit.toos;
+package com.sharekit.smartkit.tools;
 
 /**
  * MofunSky.
@@ -6,4 +6,5 @@ package com.sharekit.smartkit.toos;
  * ^_^
  */
 public class LoginTool {
+
 }

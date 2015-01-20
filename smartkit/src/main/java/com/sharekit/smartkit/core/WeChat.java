@@ -72,6 +72,9 @@ public class WeChat {
         mWeChatApi.registerApp(APP_KEY);
     }
 
+    public IWXAPI getmWeChatApi(){
+        return mWeChatApi;
+    }
     public boolean shareWeChatSession(WeChatParams weChatParams,String type){
         return shareWeChat(weChatParams,type,WXSceneSession);
     }

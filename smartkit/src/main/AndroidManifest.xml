@@ -5,5 +5,15 @@
         android:icon="@drawable/ic_launcher">
 
     </application>
-
+    <activity
+        android:name="com.tencent.connect.util.AuthActivity"
+        android:noHistory="true"
+        android:launchMode="singleTask">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="tencent100537558" />
+        </intent-filter>
+    </activity>
 </manifest>

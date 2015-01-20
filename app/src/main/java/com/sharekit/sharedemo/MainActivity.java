@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.sharekit.smartkit.core.SinaWeibo;
 import com.sharekit.smartkit.params.SinaWeiboParams;
-import com.sharekit.smartkit.toos.ShareTool;
+import com.sharekit.smartkit.tools.ShareTool;
 
 public class MainActivity extends ActionBarActivity {
 
