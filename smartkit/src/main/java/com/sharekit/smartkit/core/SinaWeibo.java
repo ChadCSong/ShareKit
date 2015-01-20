@@ -80,7 +80,6 @@ public class SinaWeibo {
         // 创建微博 SDK 接口实例
         // 获取微博客户端相关信息，如是否安装、支持 SDK 的版本
         boolean isInstalledWeibo = mWeiboShareAPI.isWeiboAppInstalled();
-        int supportApiLevel = mWeiboShareAPI.getWeiboAppSupportAPI();
         // 如果未安装微博客户端，设置下载微博对应的回调
         if (!isInstalledWeibo) {
             mWeiboShareAPI.registerWeiboDownloadListener(new IWeiboDownloadListener() {
