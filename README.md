@@ -7,5 +7,5 @@ SinaWeibo
 Tencent QQ
 Tencent WeChat
 
-Dependence:
+## Dependence:
 compile 'com.squareup.picasso:picasso:2.3.4'
