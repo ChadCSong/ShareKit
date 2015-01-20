@@ -5,7 +5,7 @@ import android.util.Log;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.UiError;
 
-class BaseIUListener implements IUiListener {
+public class BaseIUListener implements IUiListener {
 
     @Override
     public void onComplete(Object o) {
