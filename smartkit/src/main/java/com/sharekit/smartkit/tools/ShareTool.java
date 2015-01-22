@@ -26,4 +26,6 @@ public class ShareTool {
         return new QQ(activity,APP_KEY,APP_NAME);
     }
 
+
+
 }

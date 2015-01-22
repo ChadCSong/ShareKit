@@ -7,8 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.sharekit.smartkit.core.SinaWeibo;
-import com.sharekit.smartkit.params.SinaWeiboParams;
+import com.sharekit.smartkit.tools.ShareFragment;
 import com.sharekit.smartkit.tools.ShareTool;
 
 public class MainActivity extends ActionBarActivity {
@@ -23,10 +22,12 @@ public class MainActivity extends ActionBarActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SinaWeiboParams sinaWeiboParams = new SinaWeiboParams();
-                    sinaWeiboParams.setContent("fenxiang");
-                    sinaWeiboParams.setActionUrl("http://chadsong.tk");
-                    ShareTool.getSinaWeiboShareApi(MainActivity.this, getAppkey()).shareSinaWeibo(sinaWeiboParams, SinaWeibo.TYPE_TEXT);
+//                    SinaWeiboParams sinaWeiboParams = new SinaWeiboParams();
+//                    sinaWeiboParams.setContent("fenxiang");
+//                    sinaWeiboParams.setActionUrl("http://chadsong.tk");
+//                    ShareTool.getSinaWeiboShareApi(MainActivity.this, getAppkey()).shareSinaWeibo(sinaWeiboParams, SinaWeibo.TYPE_TEXT);
+                    ShareFragment shareFragment = new ShareFragment();
+
                 }
             });
         }
