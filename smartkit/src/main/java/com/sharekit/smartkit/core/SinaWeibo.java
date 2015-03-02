@@ -1,8 +1,10 @@
 package com.sharekit.smartkit.core;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.sharekit.smartkit.R;
@@ -15,12 +17,15 @@ import com.sina.weibo.sdk.api.VoiceObject;
 import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMessage;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.IWeiboDownloadListener;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.utils.Utility;
+import com.tencent.tauth.UiError;
 
 import java.io.IOException;
 
@@ -33,7 +38,7 @@ import java.io.IOException;
  * @date
  **/
 
-public class SinaWeibo {
+public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Response {
 
     //静态标记
     /**
@@ -60,36 +65,33 @@ public class SinaWeibo {
 
     //微博Api
     IWeiboShareAPI mWeiboShareAPI;
-    Context context;
+    Activity activity;
     String APP_KEY;
-
+    BaseIUListener baseIUListener;
     /**
      * 构造函数
-     * @param context
+     * @param activity
      * @param APP_KEY 与包名不匹配的话会造成微博NPE错误
      */
-    public SinaWeibo(Context context,String APP_KEY){
-        this.context = context;
+    public SinaWeibo(Activity activity,String APP_KEY){
+        this.activity = activity;
         this.APP_KEY = APP_KEY;
-        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, APP_KEY);
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(activity, APP_KEY);
         mWeiboShareAPI.registerApp();
     }
 
 
-    public boolean shareSinaWeibo(final SinaWeiboParams sinaWeiboParams, final int type) {
+    public boolean shareSinaWeibo(final SinaWeiboParams sinaWeiboParams, final int type,BaseIUListener baseIUListener) {
+        this.baseIUListener = baseIUListener;
         // 创建微博 SDK 接口实例
         // 获取微博客户端相关信息，如是否安装、支持 SDK 的版本
         boolean isInstalledWeibo = mWeiboShareAPI.isWeiboAppInstalled();
         // 如果未安装微博客户端，设置下载微博对应的回调
         if (!isInstalledWeibo) {
-            mWeiboShareAPI.registerWeiboDownloadListener(new IWeiboDownloadListener() {
-                @Override
-                public void onCancel() {
-                    Toast.makeText(context,
-                            R.string.cancel_download_weibo,
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+            Toast.makeText(activity,
+                    R.string.not_install_weibo,
+                    Toast.LENGTH_SHORT).show();
+
         }
 
         //是否转换图片
@@ -100,7 +102,7 @@ public class SinaWeibo {
                     @Override
                     public void run() {
                         try {
-                            sinaWeiboParams.setThumb(KitCore.getBitmapFromURL(sinaWeiboParams.getThumbUrl(),context,200));
+                            sinaWeiboParams.setThumb(KitCore.getBitmapFromURL(sinaWeiboParams.getThumbUrl(),activity,200));
                             Message message = new Message();
                             message.what = 1;
                             message.obj = sinaWeiboParams;
@@ -228,7 +230,7 @@ public class SinaWeibo {
                 sendSingleMessage(hasText, hasImage, hasWebpage, hasMusic, hasVideo,sinaWeiboParams);
             }
         } else {
-            Toast.makeText(context, R.string.not_support_api_hint, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.not_support_api_hint, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -279,6 +281,9 @@ public class SinaWeibo {
 
         // 3. 发送请求消息到微博，唤起微博分享界面
         mWeiboShareAPI.sendRequest(request);
+        if (sinaWeiboParams.getThumb() != null) {
+            sinaWeiboParams.getThumb().recycle();
+        }
     }
 
     /**
@@ -325,6 +330,9 @@ public class SinaWeibo {
 
         // 3. 发送请求消息到微博，唤起微博分享界面
         mWeiboShareAPI.sendRequest(request);
+        if (sinaWeiboParams.getThumb() != null) {
+            sinaWeiboParams.getThumb().recycle();
+        }
     }
 
     /**
@@ -464,6 +472,35 @@ public class SinaWeibo {
         voiceObject.duration = sinaWeiboParams.getDuration();
         voiceObject.defaultText = sinaWeiboParams.getContent();
         return voiceObject;
+    }
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 从当前应用唤起微博并进行分享后，返回到当前应用时，需要在此处调用该函数
+        // 来接收微博客户端返回的数据；执行成功，返回 true，并调用
+        // {@link IWeiboHandler.Response#onResponse}；失败返回 false，不调用上述回调
+        mWeiboShareAPI.handleWeiboResponse(intent, this);
+    }
+
+
+    @Override
+    public void onResponse(BaseResponse baseResponse) {
+        switch (baseResponse.errCode) {
+            case WBConstants.ErrorCode.ERR_OK:
+                baseIUListener.onComplete(baseResponse);
+                break;
+            case WBConstants.ErrorCode.ERR_CANCEL:
+                baseIUListener.onCancel();
+                break;
+            case WBConstants.ErrorCode.ERR_FAIL:
+                baseIUListener.onError(new UiError(1,"",""));
+                break;
+        }
+    }
+    public IWeiboShareAPI getmWeiboShareAPI(){
+        if(mWeiboShareAPI !=null)
+            return mWeiboShareAPI;
+        else return WeiboShareSDK.createWeiboAPI(activity, APP_KEY);
     }
 
 }

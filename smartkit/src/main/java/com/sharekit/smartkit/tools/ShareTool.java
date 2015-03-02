@@ -16,8 +16,8 @@ import com.sharekit.smartkit.core.WeChat;
 public class ShareTool {
 
 
-    public static SinaWeibo getSinaWeiboShareApi (Context context,String APP_KEY){
-        return new SinaWeibo(context, APP_KEY);
+    public static SinaWeibo getSinaWeiboShareApi (Activity activity,String APP_KEY){
+        return new SinaWeibo(activity, APP_KEY);
     }
     public static WeChat getWeChatShareApi (Context context,String APP_KEY){
         return new WeChat(context,APP_KEY);
