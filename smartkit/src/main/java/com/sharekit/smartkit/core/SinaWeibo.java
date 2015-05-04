@@ -1,11 +1,14 @@
 package com.sharekit.smartkit.core;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.sharekit.smartkit.R;
 import com.sharekit.smartkit.params.SinaWeiboParams;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.MusicObject;
@@ -15,11 +18,18 @@ import com.sina.weibo.sdk.api.VoiceObject;
 import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMessage;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.IWeiboDownloadListener;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.SendMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.RequestListener;
+import com.sina.weibo.sdk.openapi.UsersAPI;
+import com.sina.weibo.sdk.openapi.models.User;
 import com.sina.weibo.sdk.utils.Utility;
 
 import java.io.IOException;
@@ -58,39 +68,64 @@ public class SinaWeibo {
     public final static int TYPE_WEBPAGE = 5;
     public final static int TYPE_VOICE = 6;
 
+
+    public static final String WEIBO_REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+    /**
+     * Scope 是 OAuth2.0 授权机制中 authorize 接口的一个参数。通过 Scope，平台将开放更多的微博
+     * 核心功能给开发者，同时也加强用户隐私保护，提升了用户体验，用户在新 OAuth2.0 授权页中有权利
+     * 选择赋予应用的功能。
+     * <p/>
+     * 我们通过新浪微博开放平台-->管理中心-->我的应用-->接口管理处，能看到我们目前已有哪些接口的
+     * 使用权限，高级权限需要进行申请。
+     * <p/>
+     * 目前 Scope 支持传入多个 Scope 权限，用逗号分隔。
+     * <p/>
+     * 有关哪些 OpenAPI 需要权限申请，请查看：http://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI
+     * 关于 Scope 概念及注意事项，请查看：http://open.weibo.com/wiki/Scope
+     */
+    public static final String WEIBO_SCOPE =
+            "email,direct_messages_read,direct_messages_write,"
+                    + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+                    + "follow_app_official_microblog," + "invitation_write";
     //微博Api
     IWeiboShareAPI mWeiboShareAPI;
+    Activity activity;
     Context context;
     String APP_KEY;
+    Oauth2AccessToken mWeiboAccessToken;
+    SsoHandler mSsoHandler;
+    UsersAPI mUsersAPI;
+    WeiboLoginListener weiboLoginListener;
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == 1) {
+                sendWeiboMessage((SinaWeiboParams)msg.obj, msg.arg1);
+            }
+
+        }
+    };
+    private AuthInfo mAuthInfo;
+
 
     /**
      * 构造函数
-     * @param context
+     * @param activity
      * @param APP_KEY 与包名不匹配的话会造成微博NPE错误
      */
-    public SinaWeibo(Context context,String APP_KEY){
-        this.context = context;
+    public SinaWeibo(Activity activity,String APP_KEY){
+        this.context = activity;
+        this.activity = activity;
         this.APP_KEY = APP_KEY;
         mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, APP_KEY);
         mWeiboShareAPI.registerApp();
     }
-
 
     public boolean shareSinaWeibo(final SinaWeiboParams sinaWeiboParams, final int type) {
         // 创建微博 SDK 接口实例
         // 获取微博客户端相关信息，如是否安装、支持 SDK 的版本
         boolean isInstalledWeibo = mWeiboShareAPI.isWeiboAppInstalled();
         // 如果未安装微博客户端，设置下载微博对应的回调
-        if (!isInstalledWeibo) {
-            mWeiboShareAPI.registerWeiboDownloadListener(new IWeiboDownloadListener() {
-                @Override
-                public void onCancel() {
-                    Toast.makeText(context,
-                            R.string.cancel_download_weibo,
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
 
         //是否转换图片
 
@@ -159,18 +194,6 @@ public class SinaWeibo {
         }
     }
 
-
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what == 1) {
-                sendWeiboMessage((SinaWeiboParams)msg.obj, msg.arg1);
-            }
-
-        }
-    };
-
     public boolean registAppToSinaWeibo(){
         return mWeiboShareAPI.registerApp();
     }
@@ -228,7 +251,7 @@ public class SinaWeibo {
                 sendSingleMessage(hasText, hasImage, hasWebpage, hasMusic, hasVideo,sinaWeiboParams);
             }
         } else {
-            Toast.makeText(context, R.string.not_support_api_hint, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "版本过低", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -278,7 +301,7 @@ public class SinaWeibo {
         request.multiMessage = weiboMessage;
 
         // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(request);
+        mWeiboShareAPI.sendRequest(activity,request);
     }
 
     /**
@@ -324,7 +347,7 @@ public class SinaWeibo {
         request.message = weiboMessage;
 
         // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(request);
+        mWeiboShareAPI.sendRequest(activity,request);
     }
 
     /**
@@ -466,4 +489,70 @@ public class SinaWeibo {
         return voiceObject;
     }
 
+
+
+
+    public void loginWeibo(WeiboLoginListener weiboLoginListener){
+        this.weiboLoginListener = weiboLoginListener;
+        mAuthInfo = new AuthInfo(activity, APP_KEY, WEIBO_REDIRECT_URL, WEIBO_SCOPE);
+        mSsoHandler = new SsoHandler(activity, mAuthInfo);
+        mSsoHandler.authorize(new AuthDialogListener());
+    }
+
+    public SsoHandler getmSsoHandler(){
+        return mSsoHandler;
+    }
+
+    public void authorizeCallBack(int requestCode, int resultCode,Intent data){
+        mSsoHandler.authorizeCallBack(requestCode,resultCode,data);
+    }
+
+    public interface WeiboLoginListener{
+        public void onComplete(String name,String token,String photo,String id);
+        public void onError();
+        public void onCancel();
+    }
+
+    public class AuthDialogListener implements WeiboAuthListener {
+
+        @Override
+        public void onComplete(Bundle values) {
+            // 从 Bundle 中解析 Token
+            mWeiboAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (mWeiboAccessToken.isSessionValid()) {
+                // 保存 Token 到 SharedPreferences
+                mUsersAPI = new UsersAPI(activity,APP_KEY,mWeiboAccessToken);
+                long uid = Long.parseLong(mWeiboAccessToken.getUid());
+                mUsersAPI.show(uid, new RequestListener() {
+                    @Override
+                    public void onComplete(String response) {
+                        if (!TextUtils.isEmpty(response)) {
+
+                            User user = User.parse(response);
+                            weiboLoginListener.onComplete(user.name,mWeiboAccessToken.getToken(),user.profile_image_url,user.id);
+//                            remoteLogin(user.name,mWeiboAccessToken.getToken(),user.profile_image_url,user.id,3);
+                        }
+                    }
+
+                    @Override
+                    public void onWeiboException(WeiboException e) {
+                        weiboLoginListener.onError();
+                    }
+                });
+            } else {
+                // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确
+                String code = values.getString("code", "");
+            }
+        }
+
+        @Override
+        public void onCancel() {
+            weiboLoginListener.onCancel();
+        }
+
+        @Override
+        public void onWeiboException(WeiboException e) {
+            weiboLoginListener.onError();
+        }
+    }
 }
