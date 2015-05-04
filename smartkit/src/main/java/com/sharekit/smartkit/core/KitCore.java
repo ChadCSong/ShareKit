@@ -26,20 +26,23 @@ public class KitCore {
     //
     public static Bitmap getBitmapFromURL (String url,Context context,int sizeX,int sizeY,int KByte) throws IOException {
         Bitmap tempBitmap = Picasso.with(context).load(url).resize(sizeX,sizeY).get();
-        while (tempBitmap.getRowBytes()* tempBitmap.getHeight() > KByte * 1024)
-        {   sizeX = sizeX/2;
-            sizeY = sizeY/2;
-            tempBitmap = Picasso.with(context).load(url).resize(sizeX,sizeY).get();
-        }
-        return tempBitmap;
+        if (tempBitmap != null) {
+            while (tempBitmap.getRowBytes() * tempBitmap.getHeight() > KByte * 1024) {
+                sizeX = sizeX / 2;
+                sizeY = sizeY / 2;
+                tempBitmap = Picasso.with(context).load(url).resize(sizeX, sizeY).get();
+            }
+            return tempBitmap;
+        } else return null;
     }
     public static Bitmap getBitmapFromURL (String url,Context context,int KByte) throws IOException {
         Bitmap tempBitmap = Picasso.with(context).load(url).get();
-        while (tempBitmap.getRowBytes()* tempBitmap.getHeight() > KByte * 1024)
-        {
-            tempBitmap = Picasso.with(context).load(url).resize(tempBitmap.getWidth() / 2, tempBitmap.getHeight() / 2).get();
-        }
-        return tempBitmap;
+        if (tempBitmap != null) {
+            while (tempBitmap.getRowBytes() * tempBitmap.getHeight() > KByte * 1024) {
+                tempBitmap = Picasso.with(context).load(url).resize(tempBitmap.getWidth() / 2, tempBitmap.getHeight() / 2).get();
+            }
+            return tempBitmap;
+        } else return null;
     }
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
