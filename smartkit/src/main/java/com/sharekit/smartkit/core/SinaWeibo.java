@@ -113,6 +113,12 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
                         }
                     }
                 }).start();
+            } else if (sinaWeiboParams.getThumb() != null) {
+                Message message = new Message();
+                message.what = 1;
+                message.obj = sinaWeiboParams;
+                message.arg1 = type;
+                handler.sendMessage(message);
             }
             return true;
         }else {
