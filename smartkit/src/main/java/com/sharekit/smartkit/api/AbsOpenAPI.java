@@ -88,7 +88,7 @@ public abstract class AbsOpenAPI {
         }
 
         params.put(KEY_ACCESS_TOKEN, mAccessToken.getToken());
-        new AsyncWeiboRunner().requestAsync(url, params, httpMethod, listener);
+        new AsyncWeiboRunner(mContext).requestAsync(url, params, httpMethod, listener);
     }
 
     /**
@@ -109,6 +109,6 @@ public abstract class AbsOpenAPI {
         }
 
         params.put(KEY_ACCESS_TOKEN, mAccessToken.getToken());
-        return new AsyncWeiboRunner().request(url, params, httpMethod);
+        return new AsyncWeiboRunner(mContext).request(url, params, httpMethod);
     }
 }

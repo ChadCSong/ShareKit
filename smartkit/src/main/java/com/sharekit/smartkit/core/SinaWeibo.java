@@ -286,7 +286,7 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
         request.multiMessage = weiboMessage;
 
         // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(request);
+        mWeiboShareAPI.sendRequest(activity, request);
         if (sinaWeiboParams.getThumb() != null) {
             sinaWeiboParams.getThumb().recycle();
         }
@@ -335,7 +335,7 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
         request.message = weiboMessage;
 
         // 3. 发送请求消息到微博，唤起微博分享界面
-        mWeiboShareAPI.sendRequest(request);
+        mWeiboShareAPI.sendRequest(activity, request);
         if (sinaWeiboParams.getThumb() != null) {
             sinaWeiboParams.getThumb().recycle();
         }
