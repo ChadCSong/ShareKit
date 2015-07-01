@@ -1,12 +1,24 @@
 apply plugin: 'com.android.library'
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "http://nexus.mofun.so:8081/nexus/content/groups/public/" }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.1.0'
+        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.0.2'
+    }
+
+}
 android {
     compileSdkVersion 19
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -19,10 +31,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:21.0.3'
-    provided 'com.android.support:support-v4:21.0.3:sources'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.picasso:picasso:2.3.4'
-    compile files('libs/weibosdkcore_v3.0.1.jar')
-    compile files('libs/weibosdkcore.jar')
+    compile ('com.mofunsky:weibosdk:3.0.1'){
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+    }
 }

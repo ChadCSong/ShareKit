@@ -32,8 +32,6 @@ import com.sina.weibo.sdk.utils.LogUtil;
  * @since 2013-11-05
  */
 public abstract class AbsOpenAPI {
-    private static final String TAG = AbsOpenAPI.class.getName();
-
     /**
      * 访问微博服务接口的地址
      */
@@ -50,7 +48,7 @@ public abstract class AbsOpenAPI {
      * HTTP 参数
      */
     protected static final String KEY_ACCESS_TOKEN = "access_token";
-
+    private static final String TAG = AbsOpenAPI.class.getName();
     /**
      * 当前的 Token
      */
