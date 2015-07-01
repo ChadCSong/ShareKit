@@ -102,7 +102,7 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
                     @Override
                     public void run() {
                         try {
-                            sinaWeiboParams.setThumb(KitCore.getBitmapFromURL(sinaWeiboParams.getThumbUrl(),activity,200));
+                            sinaWeiboParams.setThumb(KitCore.getBitmapFromURL(sinaWeiboParams.getThumbUrl(),activity,500));
                             Message message = new Message();
                             message.what = 1;
                             message.obj = sinaWeiboParams;
@@ -113,7 +113,7 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
                         }
                     }
                 }).start();
-            } else if (sinaWeiboParams.getThumb() != null) {
+            } else {
                 Message message = new Message();
                 message.what = 1;
                 message.obj = sinaWeiboParams;
@@ -122,7 +122,12 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
             }
             return true;
         }else {
-            return false;
+            Message message = new Message();
+            message.what = 1;
+            message.obj = sinaWeiboParams;
+            message.arg1 = type;
+            handler.sendMessage(message);
+            return true;
         }
     }
 
@@ -136,29 +141,21 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
                         || sinaWeiboParams.getThumbUrl()!=null)
                         && sinaWeiboParams.getContent()!=null;
             case TYPE_WEBPAGE:
-                return (sinaWeiboParams.getThumb()!=null
-                        || sinaWeiboParams.getThumbUrl()!=null)
-                        && sinaWeiboParams.getContent()!=null
+                return  sinaWeiboParams.getContent()!=null
                         && sinaWeiboParams.getActionUrl()!=null
                         && sinaWeiboParams.getTitle()!=null;
             case TYPE_MUSIC:
-                return (sinaWeiboParams.getThumb()!=null
-                        || sinaWeiboParams.getThumbUrl()!=null)
-                        && sinaWeiboParams.getContent()!=null
+                return  sinaWeiboParams.getContent()!=null
                         && sinaWeiboParams.getActionUrl()!=null
                         && (sinaWeiboParams.getDataUrl()!=null||sinaWeiboParams.getDataHdUrl()!=null)
                         && sinaWeiboParams.getTitle()!=null;
             case TYPE_VIDEO:
-                return (sinaWeiboParams.getThumb()!=null
-                        || sinaWeiboParams.getThumbUrl()!=null)
-                        && sinaWeiboParams.getContent()!=null
+                return  sinaWeiboParams.getContent()!=null
                         && sinaWeiboParams.getActionUrl()!=null
                         && (sinaWeiboParams.getDataUrl()!=null||sinaWeiboParams.getDataHdUrl()!=null)
                         && sinaWeiboParams.getTitle()!=null;
             case TYPE_VOICE:
-                return (sinaWeiboParams.getThumb()!=null
-                        || sinaWeiboParams.getThumbUrl()!=null)
-                        && sinaWeiboParams.getContent()!=null
+                return  sinaWeiboParams.getContent()!=null
                         && sinaWeiboParams.getActionUrl()!=null
                         && (sinaWeiboParams.getDataUrl()!=null||sinaWeiboParams.getDataHdUrl()!=null)
                         && sinaWeiboParams.getTitle()!=null;
@@ -205,7 +202,6 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
                 break;
             case TYPE_WEBPAGE:
                 hasText = true;
-                hasImage = true;
                 hasWebpage = true;
                 break;
             case TYPE_MUSIC:
@@ -391,9 +387,12 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
      * @return 图片消息对象。
      */
     private ImageObject getImageObj(SinaWeiboParams sinaWeiboParams) {
-        ImageObject imageObject = new ImageObject();
-        imageObject.setImageObject(sinaWeiboParams.getThumb());
-        return imageObject;
+        if(sinaWeiboParams.getThumb()!=null) {
+            ImageObject imageObject = new ImageObject();
+            imageObject.setImageObject(sinaWeiboParams.getThumb());
+            return imageObject;
+        }
+        return null;
     }
 
     /**
@@ -408,10 +407,13 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
         mediaObject.description = sinaWeiboParams.getDescription();
 
         // 设置 Bitmap 类型的图片到视频对象里
-        mediaObject.setThumbImage(sinaWeiboParams.getThumb());
+
+//        mediaObject.setThumbImage(sinaWeiboParams.getThumb());
         mediaObject.actionUrl = sinaWeiboParams.getActionUrl();
         mediaObject.defaultText = sinaWeiboParams.getContent();
-        return mediaObject;
+        if(mediaObject.checkArgs()) {
+            return mediaObject;
+        }else return null;
     }
 
     /**

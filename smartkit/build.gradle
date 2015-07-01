@@ -36,5 +36,4 @@ dependencies {
     provided 'com.android.support:support-v4:21.0.3:sources'
     compile 'com.squareup.picasso:picasso:2.3.4'
     compile files('libs/weibosdkcore_v3.0.1.jar')
-    compile files('libs/weibosdkcore.jar')
 }
