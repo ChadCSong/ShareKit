@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -31,10 +31,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:21.0.3'
+    provided 'com.android.support:support-v4:21.0.3:sources'
     compile 'com.squareup.picasso:picasso:2.3.4'
-    compile ('com.mofunsky:weibosdk:3.0.1'){
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-    }
+    compile files('libs/weibosdkcore_v3.0.1.jar')
+    compile files('libs/weibosdkcore.jar')
 }
