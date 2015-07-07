@@ -9,10 +9,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * MofunSky.
- * Created by ChadSong on 15/1/16.
- * ^_^
- */
+ * @title KitCore
+ * @description
+ * @author Chad
+ * @since 15/7/7 上午11:04
+ * @modifier
+ * @date
+ **/
+
 public class KitCore {
     //平台标记
     public static String WeChat = "WE_CHAT_PLATFORM";
@@ -23,7 +27,18 @@ public class KitCore {
     public static String SinaWeibo = "SINA_WEIBO_PLATFORM";
 
 
-    //
+    /**
+     * 从URL中获取Bitmap
+     *
+     * @param url     网址
+     * @param context
+     * @param sizeX   输出Width
+     * @param sizeY   输出Height
+     * @param KByte   最大输出大小
+     * @return
+     * @throws IOException
+     */
+
     public static Bitmap getBitmapFromURL (String url,Context context,int sizeX,int sizeY,int KByte) throws IOException {
         Bitmap tempBitmap = Picasso.with(context).load(url).resize(sizeX,sizeY).get();
         if (tempBitmap != null) {
@@ -35,6 +50,15 @@ public class KitCore {
             return tempBitmap;
         } else return null;
     }
+
+    /**
+     * 从URL中获取Bitmap
+     * @param url 网址
+     * @param context
+     * @param KByte 最大输出大小
+     * @return
+     * @throws IOException
+     */
     public static Bitmap getBitmapFromURL (String url,Context context,int KByte) throws IOException {
         Bitmap tempBitmap = Picasso.with(context).load(url).get();
         if (tempBitmap != null) {
