@@ -1,6 +1,7 @@
 package com.sharekit.smartkit.core;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import com.squareup.picasso.Picasso;
@@ -84,4 +85,24 @@ public class KitCore {
 
         return result;
     }
+
+    public static final boolean isApkInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * QQ判断是否安装
+     */
+    public static String packageNameQQ = "com.tencent.mobileqq";
+
+    public static final boolean isQQInstalled(Context context) {
+        return isApkInstalled(context, packageNameQQ);
+    }
+
+
 }

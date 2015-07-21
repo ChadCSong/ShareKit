@@ -2,7 +2,9 @@ package com.sharekit.smartkit.core;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.sharekit.smartkit.R;
 import com.sharekit.smartkit.params.QQParams;
 import com.tencent.connect.share.QQShare;
 import com.tencent.tauth.Tencent;
@@ -36,6 +38,12 @@ public class QQ {
 
     public boolean shareQQ(QQParams qqParams,int type,BaseIUListener baseIUListener){
         Bundle params = new Bundle();
+        if (!KitCore.isQQInstalled(activity)) {
+            Toast.makeText(activity,
+                    R.string.not_install_qq,
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
         switch (type)
         {
             case TYPE_IMAGE_TEXT:
