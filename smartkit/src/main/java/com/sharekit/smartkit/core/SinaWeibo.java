@@ -91,7 +91,7 @@ public class SinaWeibo extends FragmentActivity implements IWeiboHandler.Respons
             Toast.makeText(activity,
                     R.string.not_install_weibo,
                     Toast.LENGTH_SHORT).show();
-
+            return false;
         }
 
         //是否转换图片
