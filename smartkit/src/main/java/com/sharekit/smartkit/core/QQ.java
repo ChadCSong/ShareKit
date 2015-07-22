@@ -71,6 +71,40 @@ public class QQ {
         return true;
     }
 
+    public boolean shareQQZone(QQParams qqParams, int type, BaseIUListener baseIUListener) {
+        Bundle params = new Bundle();
+        if (!KitCore.isQQInstalled(activity)) {
+            Toast.makeText(activity,
+                    R.string.not_install_qq,
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        switch (type) {
+            case TYPE_IMAGE_TEXT:
+
+                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+                params.putString(QQShare.SHARE_TO_QQ_TITLE, qqParams.getTitle());
+                params.putString(QQShare.SHARE_TO_QQ_SUMMARY, qqParams.getSummary());
+                params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, qqParams.getImage_url());
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, qqParams.getTarget_url());
+                params.putString(QQShare.SHARE_TO_QQ_APP_NAME, APP_NAME);
+                mTencent.shareToQzone(activity, params, baseIUListener);
+                break;
+            case TYPE_MUSIC:
+                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+                params.putString(QQShare.SHARE_TO_QQ_TITLE, qqParams.getTitle());
+                params.putString(QQShare.SHARE_TO_QQ_SUMMARY, qqParams.getSummary());
+                params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, qqParams.getImage_url());
+                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, qqParams.getTarget_url());
+                params.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, qqParams.getAudio_url());
+                params.putString(QQShare.SHARE_TO_QQ_APP_NAME, APP_NAME);
+                mTencent.shareToQzone(activity, params, baseIUListener);
+                break;
+
+        }
+        return true;
+    }
+
 //    Bundle params = new Bundle();
 //    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
 //    params.putString(QQShare.SHARE_TO_QQ_TITLE, "要分享的标题");
