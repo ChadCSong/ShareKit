@@ -9,6 +9,8 @@ import com.sharekit.smartkit.params.QQParams;
 import com.tencent.connect.share.QQShare;
 import com.tencent.tauth.Tencent;
 
+import java.util.ArrayList;
+
 /**
  * @author Chad
  * @title com.sharekit.smartkit.core
@@ -85,7 +87,9 @@ public class QQ {
                 params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
                 params.putString(QQShare.SHARE_TO_QQ_TITLE, qqParams.getTitle());
                 params.putString(QQShare.SHARE_TO_QQ_SUMMARY, qqParams.getSummary());
-                params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, qqParams.getImage_url());
+                ArrayList<String> imageArray = new ArrayList<String>();
+                imageArray.add(qqParams.getImage_url());
+                params.putStringArrayList(QQShare.SHARE_TO_QQ_IMAGE_URL, imageArray);
                 params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, qqParams.getTarget_url());
                 params.putString(QQShare.SHARE_TO_QQ_APP_NAME, APP_NAME);
                 mTencent.shareToQzone(activity, params, baseIUListener);
@@ -94,7 +98,9 @@ public class QQ {
                 params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
                 params.putString(QQShare.SHARE_TO_QQ_TITLE, qqParams.getTitle());
                 params.putString(QQShare.SHARE_TO_QQ_SUMMARY, qqParams.getSummary());
-                params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, qqParams.getImage_url());
+                ArrayList<String> imageArray1 = new ArrayList<String>();
+                imageArray1.add(qqParams.getImage_url());
+                params.putStringArrayList(QQShare.SHARE_TO_QQ_IMAGE_URL, imageArray1);
                 params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, qqParams.getTarget_url());
                 params.putString(QQShare.SHARE_TO_QQ_AUDIO_URL, qqParams.getAudio_url());
                 params.putString(QQShare.SHARE_TO_QQ_APP_NAME, APP_NAME);
