@@ -7,9 +7,12 @@ Update
 3rd Platform Support:
 SinaWeibo 
 Tencent QQ
+Tencent QQZone
 Tencent WeChat
 
 ## Usage
+
+``java
 //Weibo
 
 ShareTool.getSinaWeiboShareApi(Activity, AppConfig.WEIBO_APP_ID)
@@ -34,6 +37,9 @@ ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID)
 
 ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID)
     .shareWeChatSession(WeChatParams, WeChat.TYPE_WEB_PAGE);
-
+``
 ## Dependence:
+
+``java
 compile 'com.squareup.picasso:picasso:2.3.4'
+``
