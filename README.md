@@ -12,29 +12,35 @@ Tencent WeChat
 
 ## Usage
 
+```java
+//Weibo
 
-``//Weibo
+ShareTool.getSinaWeiboShareApi(Activity, AppConfig.WEIBO_APP_ID)
+    .shareSinaWeibo(SinaWeiboParams, SinaWeibo.TYPE_WEBPAGE, new BaseIUListener()) ;
 
-``ShareTool.getSinaWeiboShareApi(Activity, AppConfig.WEIBO_APP_ID).shareSinaWeibo(SinaWeiboParams, SinaWeibo.TYPE_WEBPAGE, new BaseIUListener()) ;
+//QQ
 
-``//QQ
+ShareTool.getQQShareApi(Activity, AppConfig.QQ_APP_ID,"AppName")
+    .shareQQ(QQParams, QQ.TYPE_IMAGE_TEXT,new BaseIUListener());
 
-``ShareTool.getQQShareApi(Activity, AppConfig.QQ_APP_ID,"AppName").shareQQ(QQParams, QQ.TYPE_IMAGE_TEXT,new BaseIUListener());
+//WeChat TimeLine
 
-``//WeChat TimeLine
+ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID)
+    .shareWeChatTimeline(WeChatParams, WeChat.TYPE_WEB_PAGE);
 
-``ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID).shareWeChatTimeline(WeChatParams, WeChat.TYPE_WEB_PAGE);
+//WeChat Favourite
 
-``//WeChat Favourite
+ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID)
+    .shareWeChatFavourite(WeChatParams, WeChat.TYPE_WEB_PAGE);
 
-``ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID).shareWeChatFavourite(WeChatParams, WeChat.TYPE_WEB_PAGE);
+//WeChat Friend
 
-``//WeChat Friend
-
-``ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID).shareWeChatSession(WeChatParams, WeChat.TYPE_WEB_PAGE);
-
+ShareTool.getWeChatShareApi(activity, AppConfig.WX_APP_ID)
+    .shareWeChatSession(WeChatParams, WeChat.TYPE_WEB_PAGE);
+```
 ## Dependence:
 
-``
+```java
 compile 'com.squareup.picasso:picasso:2.3.4'
-``
+
+```
