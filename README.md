@@ -1,3 +1,5 @@
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ibireme/YYText/master/LICENSE)&nbsp;
+
 # ShareKit
 This is a 3rd platform share helper.
 
